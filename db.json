@@ -1,0 +1,99 @@
+{
+  "dashboard": [
+    {
+      "kpiData": {
+        "devicesAtivos": {
+          "online": "3",
+          "offline": "4",
+          "total": 0
+        },
+        "tempoMedioSolucao": "0min 58seg",
+        "chamadosFinalizados": "4",
+        "osBreakdown": {
+          "ios": 0,
+          "android": 0
+        }
+      },
+      "devices": [
+        {
+          "nome": "I070 - iPhone SE",
+          "situacao": "ONLINE"
+        },
+        {
+          "nome": "I111 – Iphone 11",
+          "situacao": "OFFLINE"
+        },
+        {
+          "nome": "I110 - iPhone 12",
+          "situacao": "ONLINE"
+        },
+        {
+          "nome": "S064 – Galaxy M20 ",
+          "situacao": "ONLINE"
+        },
+        {
+          "nome": "S064 - Galaxy M20",
+          "situacao": "OFFLINE"
+        },
+        {
+          "nome": "S076 - Galaxy A20s",
+          "situacao": "OFFLINE"
+        },
+        {
+          "nome": "S149 - Galaxy S21",
+          "situacao": "OFFLINE"
+        }
+      ],
+      "chamados": [
+        {
+          "id": "IJ-686",
+          "status": "Em andamento",
+          "tempo": {}
+        },
+        {
+          "id": "IJ-685",
+          "status": "Concluído",
+          "tempo": {
+            "minutes": 1,
+            "seconds": 28
+          }
+        },
+        {
+          "id": "IJ-684",
+          "status": "Em andamento",
+          "tempo": {}
+        }
+      ],
+      "logs": [
+        {
+          "data": "2025-07-18T14:23:38.707Z",
+          "device": "I111 – Iphone 11",
+          "acao": "Conexão com Appium reiniciada",
+          "log": "Simcard alterado"
+        },
+        {
+          "data": "2025-07-18T14:07:10.551Z",
+          "device": "I070 - iPhone SE",
+          "acao": "Inicialização concluída",
+          "log": null
+        }
+      ],
+      "chartData": {
+        "labels": [
+          "Finalizados Pelo Agente",
+          "Em análise manual",
+          "Em andamento"
+        ],
+        "datasets": [
+          {
+            "data": ["4", "5", "23"],
+            "backgroundColor": ["#14b8a6", "#f59e0b", "#64748b"],
+            "borderColor": ["#ffffff"],
+            "borderWidth": 4,
+            "hoverOffset": 4
+          }
+        ]
+      }
+    }
+  ]
+}
