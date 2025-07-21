@@ -6,10 +6,8 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 ChartJS.register(ArcElement, Tooltip, Legend)
 
 const fetchDashboardData = async () => {
-  const response = await axios.get(
-    'http://100.80.143.167:25678/webhook-test/check-devices'
-  )
-  return response.data[0]
+  const response = await axios.get('/api/webhook/check-devices')
+  return response.data
 }
 
 export default function App() {
@@ -89,7 +87,16 @@ export default function App() {
             <tbody>
               {chamados.map((c, i) => (
                 <tr key={i}>
-                  <td>{c.id}</td>
+                  <td className="py-2">
+                    <a
+                      href={`https://primecontrol.atlassian.net/jira/software/projects/IJ/list?selectedIssue=${c.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 font-medium hover:underline"
+                    >
+                      {c.id}
+                    </a>
+                  </td>
                   <td>{c.status}</td>
                   <td>
                     {c.tempo?.minutes !== undefined
