@@ -103,11 +103,12 @@ const App = () => {
     <div className="min-h-screen bg-gray-100">
       <div className="bg-slate-800 text-white p-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="w-10 h-10 bg-teal-500 rounded-lg flex items-center justify-center">
-              <Monitor className="h-6 w-6" />
+          <div className="flex items-center space-x-5">
+            <div className="w-55 h-24 bg-white rounded-lg flex items-center justify-center px-4 space-x-3">
+              <img src='./public/primecontrol.png' alt="PrimeControl Logo" className="h-10" />
+              <img src='./public/vivo.svg' alt="Vivo Logo" className="h-10" />
             </div>
-            <h1 className="text-2xl font-bold">Dashboard de Monitoramento</h1>
+            <h1 className="text-2xl text-center font-bold">Dashboard de Monitoramento - ITSM VIVO</h1>   
           </div>
         </div>
       </div>
