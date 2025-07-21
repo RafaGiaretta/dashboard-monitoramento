@@ -59,7 +59,50 @@ const App = () => {
           padding: 20,
           font: { size: 12 }
         }
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            const label = context.label || '';
+            const value = context.parsed;
+            const total = context.dataset.data.reduce((sum, val) => sum + val, 0);
+            const percentage = ((value / total) * 100).toFixed(1);
+            return label + ': ' + percentage + '%';
+          }
+        }
       }
+    },
+    animation: {
+      animateRotate: true,
+      animateScale: true
+    },
+    onHover: (event, elements, chart) => {
+      chart.canvas.style.cursor = elements.length > 0 ? 'pointer' : 'default';
+    }
+  };
+
+  // Plugin customizado para mostrar porcentagens nas fatias
+  const percentagePlugin = {
+    id: 'percentagePlugin',
+    afterDatasetsDraw: (chart) => {
+      const { ctx } = chart;
+      const { data } = chart.config;
+      const total = data.datasets[0].data.reduce((sum, val) => sum + val, 0);
+      
+      chart.getDatasetMeta(0).data.forEach((arc, index) => {
+        const value = data.datasets[0].data[index];
+        const percentage = ((value / total) * 100).toFixed(1);
+        
+        const { x, y } = arc.tooltipPosition();
+        
+        ctx.save();
+        ctx.font = 'bold 14px Arial';
+        ctx.fillStyle = '#fff';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(percentage + '%', x, y);
+        ctx.restore();
+      });
     }
   };
 
@@ -99,6 +142,15 @@ const App = () => {
 
   const { kpiData, devices, chamados, logs, chartData } = data;
 
+  // Debug: verificar se os logs estão sendo recebidos
+  console.log('Dados recebidos da API:', { 
+    logsCount: logs?.length || 0, 
+    logs: logs?.slice(0, 3),
+    kpiData,
+    devices: devices?.length || 0,
+    chamados: chamados?.length || 0
+  });
+
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="bg-slate-800 text-white p-4">
@@ -136,9 +188,9 @@ const App = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="bg-white rounded-lg shadow-lg p-6 max-h-96 overflow-y-auto">
               <h3 className="text-lg font-semibold mb-4">Chamados</h3>
-              <table className="w-full">
+              <table className="w-full ">
                 <thead>
                   <tr>
                     <th>ID</th><th>Status</th><th>Tempo</th>
@@ -163,15 +215,34 @@ const App = () => {
               </table>
             </div>
 
-            <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="bg-white rounded-lg shadow-lg p-6  max-h-96 overflow-y-auto">
               <h3 className="text-lg font-semibold mb-4">Logs</h3>
-              <ul>
-                {logs.slice(0, 10).map((l, i) => (
-                  <li key={i} className="py-2 border-b">
-                    <strong>{new Date(l.data).toLocaleString()}</strong> - {l.device} - {l.acao} - {l.log || '-'}
-                  </li>
-                ))}
-              </ul>
+              {logs && logs.length > 0 ? (
+                <ul className="space-y-1">
+                  {logs.slice(0, 10).map((l, i) => (
+                    <li key={i} className="py-2 border-b text-sm">
+                      <div className="flex flex-col space-y-1">
+                        <div className="font-medium text-gray-800">
+                        {l.data ? l.data.replace('T', ' ').replace('Z', '').split('.')[0] : 'Data não disponível'}
+                        </div>
+                        <div className="text-gray-600">
+                          <span className="font-medium">Device:</span> {l.device || 'N/A'} | 
+                          <span className="font-medium"> Ação:</span> {l.acao || 'N/A'}
+                        </div>
+                        {l.log && (
+                          <div className="text-gray-500 text-xs">
+                            <span className="font-medium">Log:</span> {l.log}
+                          </div>
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <div className="text-center text-gray-500 py-4">
+                  <p>Nenhum log disponível</p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -179,7 +250,7 @@ const App = () => {
             <div className="bg-white rounded-lg shadow-lg p-6">
               <h3 className="text-lg font-semibold mb-4">Distribuição de Chamados</h3>
               <div className="h-64">
-                <Doughnut data={chartData} options={chartOptions} />
+                <Doughnut data={chartData} options={chartOptions} plugins={[percentagePlugin]} />
               </div>
             </div>
             <div className="bg-white rounded-lg shadow-lg p-6">
