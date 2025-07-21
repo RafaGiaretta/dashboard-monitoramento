@@ -157,8 +157,8 @@ const App = () => {
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-5">
             <div className="w-55 h-24 bg-white rounded-lg flex items-center justify-center px-4 space-x-3">
-              <img src='./public/primecontrol.png' alt="PrimeControl Logo" className="h-10" />
-              <img src='./public/vivo.svg' alt="Vivo Logo" className="h-10" />
+              <img src='/primecontrol.png' alt="PrimeControl Logo" className="h-10" />
+              <img src='/vivo.svg' alt="Vivo Logo" className="h-10" />
             </div>
             <h1 className="text-2xl text-center font-bold">Dashboard de Monitoramento - ITSM VIVO</h1>   
           </div>
