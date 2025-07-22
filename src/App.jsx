@@ -41,8 +41,10 @@ const App = () => {
         return 'text-blue-600 bg-blue-100';
       case 'Pendente':
         return 'text-yellow-600 bg-yellow-100';
-      case 'Cancelado':
+      case 'Aguardando Humano':
         return 'text-red-600 bg-red-100';
+      case 'Cancelado':
+        return 'text-gray-600 bg-gray-100';
       default:
         return 'text-gray-600 bg-gray-100';
     }
@@ -186,84 +188,82 @@ const App = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white rounded-lg shadow-lg p-6 max-h-96 overflow-y-auto">
-              <h3 className="text-lg font-semibold mb-4">Chamados</h3>
-              <table className="w-full ">
-                <thead>
-                  <tr>
-                    <th>ID</th><th>Status</th><th>Tempo</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {chamados.map((c) => (
-                    <tr key={c.id}>
-                      <td className="text-blue-600 font-medium text-center"><a
-                      href={`https://primecontrol.atlassian.net/browse/${c.id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 font-medium hover:underline"
-                    >
-                      {c.id}
-                    </a></td>
-                      <td className='text-center'><span className={`text-centerpx-2 py-1 rounded-full text-xs font-medium ${getStatusColor(c.status)}`}>{c.status}</span></td>
-                      <td className='text-center'>{formatTempo(c.tempo)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="bg-white rounded-lg shadow-lg p-6  max-h-96 overflow-y-auto">
-              <h3 className="text-lg font-semibold mb-4">Logs</h3>
-              {logs && logs.length > 0 ? (
-                <ul className="space-y-1">
-                  {logs.slice(0, 10).map((l, i) => (
-                    <li key={i} className="py-2 border-b text-sm">
-                      <div className="flex flex-col space-y-1">
-                        <div className="font-medium text-gray-800">
-                        {l.data ? l.data.replace('T', ' ').replace('Z', '').split('.')[0] : 'Data não disponível'}
-                        </div>
-                        <div className="text-gray-600">
-                          <span className="font-medium">Device:</span> {l.device || 'N/A'} | 
-                          <span className="font-medium"> Ação:</span> {l.acao || 'N/A'}
-                        </div>
-                        {l.log && (
-                          <div className="text-gray-500 text-xs">
-                            <span className="font-medium">Log:</span> {l.log}
-                          </div>
-                        )}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <div className="text-center text-gray-500 py-4">
-                  <p>Nenhum log disponível</p>
-                </div>
-              )}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h3 className="text-lg font-semibold mb-4">Distribuição de Chamados</h3>
+            <div className="h-64">
+              <Doughnut data={chartData} options={chartOptions} plugins={[percentagePlugin]} />
             </div>
           </div>
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h3 className="text-lg font-semibold mb-4">Devices</h3>
+            <ul className="space-y-2">
+              {devices.map((d, i) => (
+                <li key={i} className="flex justify-between items-center p-2 bg-gray-50 rounded">
+                  <span>{d.nome}</span>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDeviceStatusColor(d.situacao)}`}>{d.situacao}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
 
-          <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h3 className="text-lg font-semibold mb-4">Distribuição de Chamados</h3>
-              <div className="h-64">
-                <Doughnut data={chartData} options={chartOptions} plugins={[percentagePlugin]} />
-              </div>
-            </div>
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h3 className="text-lg font-semibold mb-4">Devices</h3>
-              <ul className="space-y-2">
-                {devices.map((d, i) => (
-                  <li key={i} className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                    <span>{d.nome}</span>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDeviceStatusColor(d.situacao)}`}>{d.situacao}</span>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="bg-white rounded-lg shadow-lg p-6 max-h-96 overflow-y-auto">
+            <h3 className="text-lg font-semibold mb-4">Chamados</h3>
+            <table className="w-full ">
+              <thead>
+                <tr>
+                  <th>ID</th><th>Status</th><th>Tempo</th>
+                </tr>
+              </thead>
+              <tbody>
+                {chamados.map((c) => (
+                  <tr key={c.id}>
+                    <td className="text-blue-600 font-medium text-center"><a
+                    href={`https://primecontrol.atlassian.net/browse/${c.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 font-medium hover:underline"
+                  >
+                    {c.id}
+                  </a></td>
+                    <td className='text-center'><span className={`text-centerpx-2 py-1 rounded-full text-xs font-medium ${getStatusColor(c.status)}`}>{c.status}</span></td>
+                    <td className='text-center'>{formatTempo(c.tempo)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-lg p-6  max-h-96 overflow-y-auto">
+            <h3 className="text-lg font-semibold mb-4">Logs</h3>
+            {logs && logs.length > 0 ? (
+              <ul className="space-y-1">
+                {logs.slice(0, 10).map((l, i) => (
+                  <li key={i} className="py-2 border-b text-sm">
+                    <div className="flex flex-col space-y-1">
+                      <div className="font-medium text-gray-800">
+                      {l.data ? l.data.replace('T', ' ').replace('Z', '').split('.')[0] : 'Data não disponível'}
+                      </div>
+                      <div className="text-gray-600">
+                        <span className="font-medium">Device:</span> {l.device || 'N/A'} | 
+                        <span className="font-medium"> Ação:</span> {l.acao || 'N/A'}
+                      </div>
+                      {l.log && (
+                        <div className="text-gray-500 text-xs">
+                          <span className="font-medium">Log:</span> {l.log}
+                        </div>
+                      )}
+                    </div>
                   </li>
                 ))}
               </ul>
-            </div>
+            ) : (
+              <div className="text-center text-gray-500 py-4">
+                <p>Nenhum log disponível</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
